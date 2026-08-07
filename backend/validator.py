@@ -1,12 +1,27 @@
-
 # this function handles the file structure and ensuring each columns are same
 # we are comparing and analysing files with same structure.
 from collections import Counter
 # This function handles the dimension of cols.
+# BUGFIX: this used to do `line.split()` on the WHOLE FILE's text (the
+# caller passes full multi-line content here, not a single line, despite
+# the parameter name) -- with no line-splitting first, that counted
+# every token across every row combined, producing a number unique to
+# however many rows a file happened to have rather than its actual
+# column count. Two headerless files with the exact same real structure
+# would almost never match, since they rarely have the same row count.
+# Now it counts columns per line and takes the most common count across
+# the file -- robust against the odd near-blank/heartbeat line mixed in
+# (e.g. a timestamp-only row with no reading attached).
 
 def count_columns(line: str) -> int:
-    columns = line.split()
-    return len(columns)
+    counts = Counter(
+        len(row.split())
+        for row in line.splitlines()
+        if row.split()
+    )
+    if not counts:
+        return 0
+    return counts.most_common(1)[0][0]
 
 
 
@@ -37,7 +52,12 @@ def extract_header(content: str) -> dict:
                     "raw": columns  # NEW — full line, positions intact
                 }
 
-        return {"unfiltered": [], "raw": []}  # FIXED: Added a default return value in case no header is found
+        # BUGFIX: this used to be keyed "unfiltered", but group_uploaded_files()
+        # below always reads header_result["filtered"] -- for any file with no
+        # date header, that raised a KeyError and crashed the whole /upload
+        # request. Keying it "filtered" (still empty) makes the no-header path
+        # actually reachable, which is what group_headerless_files() expects.
+        return {"filtered": [], "raw": []}
 
 # this function ensures all headers appear same so no extra whitespaces.
 def normalize_headers(headers: list) -> tuple:

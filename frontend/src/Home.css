@@ -1,0 +1,169 @@
+/* App shell layout: sidebar + full-height main content, dark navy theme.
+   Place at src/Home.css. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  background: #08111F;
+  padding: 40px 48px;
+  overflow-y: auto;
+  font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  color: #F3F8FF;
+  color-scheme: dark;
+}
+
+.main-content__page {
+  animation: main-content-fade-in 0.2s ease;
+}
+
+@keyframes main-content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-content__page {
+    animation: none;
+  }
+}
+
+.home__loading {
+  text-align: center;
+  color: #6F8097;
+  font-size: 14px;
+  margin-top: 60px;
+}
+
+.home__workspace {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.home__workspace-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.home__workspace-eyebrow {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #29C7F6;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.home__workspace-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #F3F8FF;
+  margin: 0;
+}
+
+.home__workspace-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #F3F8FF;
+  margin: 0;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.home__rename-icon {
+  width: 15px;
+  height: 15px;
+  color: #6F8097;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.home__workspace-title:hover .home__rename-icon {
+  opacity: 1;
+}
+
+.home__workspace-title:hover {
+  color: #29C7F6;
+}
+
+.home__rename {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home__rename-input {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F3F8FF;
+  background: #0F1B2D;
+  border: 1px solid #29C7F6;
+  border-radius: 8px;
+  padding: 4px 10px;
+}
+
+.home__rename-input:focus {
+  outline: none;
+}
+
+.home__rename-save,
+.home__rename-cancel {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #22324A;
+}
+
+.home__rename-save {
+  background: #29C7F6;
+  color: #08111F;
+  border-color: #29C7F6;
+}
+
+.home__rename-cancel {
+  background: transparent;
+  color: #9AA9BD;
+}
+
+.home__rename-error {
+  font-size: 12px;
+  color: #E8A387;
+  margin: 4px 0 0;
+}
+
+.time-window-select {
+  padding: 8px 14px;
+  border: 1px solid #22324A;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: #0F1B2D;
+  color: #F3F8FF;
+  cursor: pointer;
+  color-scheme: dark;
+  transition: border-color 0.15s ease;
+}
+
+.time-window-select:hover {
+  border-color: #29C7F6;
+}

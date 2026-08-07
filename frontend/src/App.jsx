@@ -1,19 +1,17 @@
-    // App.jsx
-    // This is the top level of the app.
-    // Its job is to:
-    // 1. Decide WHAT to show based on current state (upload screen vs result screen)
-    // 2. Wire the hook (useUpload) to the components (FileUpload, ValidationResult)
-    // 3. Handle what happens when user clicks "Proceed to analysis"
-    //
-    // It does NOT handle fetch logic (that's useUpload.js)
-    // It does NOT handle file picker UI (that's FileUpload.jsx)
-    // It does NOT handle result display (that's ValidationResult.jsx)
+// Top-level app: shows Login until a session exists, then Home -- which
+// decides on its own whether to show the upload flow or the workspace.
+// Place this at src/App.jsx (replaces the previous version).
 
+import { useAuth } from './hooks/UseAuth.jsx'
+import Login from './components/Login'
+import Home from './Home'
 
-import UploadTester from "./components/Uploadtester.jsx";
+export default function App() {
+  const { session, loading } = useAuth()
 
-function App() {
-  return <UploadTester />;
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
+  return session ? <Home /> : <Login />
 }
-
-export default App;

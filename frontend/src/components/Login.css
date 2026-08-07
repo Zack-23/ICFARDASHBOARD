@@ -1,0 +1,188 @@
+/* Login screen -- full-bleed dark navy background with the animated
+   sensor-trace signature running behind everything, and a dark card
+   (matching the dashboard's card treatment) centered on top. Same
+   navy/slate/cyan system as the rest of the app.
+   Place this at src/components/Login.css. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+.login-screen {
+  --bg-main: #08111F;
+  --card-surface: #0F1B2D;
+  --border-subtle: #22324A;
+  --accent-cyan: #29C7F6;
+  --accent-cyan-hover: #4DD8FF;
+  --text-primary: #F3F8FF;
+  --text-secondary: #9AA9BD;
+  --text-muted: #6F8097;
+  --grid-line: rgba(255, 255, 255, 0.04);
+
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg-main);
+  font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  padding: 24px;
+  color-scheme: dark;
+}
+
+/* ---------- Full-bleed background ---------- */
+
+.login-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.login-panel__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.login-trace {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 160px;
+  margin-top: -80px;
+  display: flex;
+  animation: trace-scroll 18s linear infinite;
+}
+
+.login-trace__svg {
+  width: 800px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.login-trace__svg path {
+  stroke: var(--accent-cyan);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.45;
+}
+
+@keyframes trace-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-trace { animation: none; }
+}
+
+/* ---------- Wordmark ---------- */
+
+.login-wordmark {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--text-primary);
+}
+
+/* ---------- Centered card ---------- */
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 360px;
+  background: var(--card-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.login-eyebrow {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--accent-cyan);
+  margin-bottom: 14px;
+}
+
+.login-heading {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.login-subheading {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+
+.login-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1B2027;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login-google-btn:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(41, 199, 246, 0.15);
+}
+
+.login-google-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+.login-google-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.login-footer {
+  margin: 24px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .login-wordmark {
+    top: 20px;
+    left: 20px;
+  }
+
+  .login-card {
+    padding: 28px 24px;
+    border-radius: 16px;
+  }
+}

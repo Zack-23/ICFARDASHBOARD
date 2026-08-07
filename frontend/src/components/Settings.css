@@ -1,0 +1,79 @@
+/* Styling for Settings.jsx. Place at src/components/Settings.css. */
+
+.settings {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #0F1B2D;
+  border: 1px solid #22324A;
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+.settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.settings__header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #F3F8FF;
+  margin: 0;
+}
+
+.settings__back {
+  padding: 7px 16px;
+  border: 1px solid #22324A;
+  border-radius: 8px;
+  background: #132238;
+  color: #F3F8FF;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.settings__back:hover {
+  border-color: #29C7F6;
+}
+
+.settings__section {
+  padding: 18px 0;
+  border-bottom: 1px solid #22324A;
+}
+
+.settings__section:last-of-type {
+  border-bottom: none;
+}
+
+.settings__label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #6F8097;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.settings__value {
+  font-size: 14px;
+  color: #F3F8FF;
+  margin: 0;
+}
+
+.settings__hint {
+  font-size: 12px;
+  color: #9AA9BD;
+  margin: 0 0 10px;
+}
+
+.settings__saved {
+  margin-left: 10px;
+  font-size: 12px;
+  color: #4DD8FF;
+}

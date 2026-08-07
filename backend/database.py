@@ -1,17 +1,17 @@
-from datetime import datetime, timedelta, timezone
-from dateutil import parser as date_parser
-# This file handles all database operations, such us creatings groups,
-# deleting groups, and showcasing listings.
+# This file's purpose is to handle all Supabase Postgres (database) concerns:
+# creating/looking up/listing groups, and inserting/replacing/fetching their
+# combined readings. It does not touch Supabase Storage (see storage.py) and
+# does not parse or combine raw files (see processor.py) — it only receives
+# an already-built DataFrame from the orchestrator (app.py) and stores it.
 
 import os
-
-
-
 import pandas as pd
+from datetime import datetime, timedelta
+from dateutil import parser as date_parser
 from dotenv import load_dotenv
 from supabase import create_client
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
@@ -19,129 +19,122 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 GROUPS_TABLE = "groups"
 READINGS_TABLE = "group_readings"
-INSERT_CHUNK_SIZE = 500
+INSERT_CHUNK_SIZE = 500  # rows per insert call, keeps payloads reasonable
+
 
 def create_group(group_id: str, user_id: str, name: str, headers: list[str]) -> str:
-
-    # This function creates a new row for group using the paramaters passed.
-    # each upload gets one row in group table and returns group_id.
+    """Creates a new group row for a group_id that storage.py's save_group
+    already generated (that's the same ID used for the permanent_storage
+    folder — this function must reuse it, not mint a new one, or the
+    files and the database row would point at two different groups)."""
     supabase.table(GROUPS_TABLE).insert({
-        "user_id": user_id,
         "group_id": group_id,
+        "user_id": user_id,
         "name": name,
         "headers": headers,
     }).execute()
-
     return group_id
 
+
 def get_group(group_id: str) -> dict | None:
-
-    # This function grabs a specific row in groups table that matches the group_id.
-
-    result  = (
+    """Fetches a single group's metadata by group_id. Used once a user
+    selects a specific group from history, to label the page/graphs
+    before its readings are loaded."""
+    result = (
         supabase.table(GROUPS_TABLE)
         .select("*")
         .eq("group_id", group_id)
         .execute()
     )
     rows = result.data
-    if rows:
-        return rows[0]
-    else:
-        return None
+    return rows[0] if rows else None
 
 
-def get_group_by_name(user_id: str, name:str ) -> dict | None:
-    # this function looks up existing group by name, and user id.
+def get_group_by_name(user_id: str, name: str) -> dict | None:
+    """Looks up an existing group by (user_id, name), case-insensitive.
+    Used to decide new-save vs. append when the user names a group."""
     result = (
         supabase.table(GROUPS_TABLE)
         .select("*")
         .eq("user_id", user_id)
+        .ilike("name", name)
         .execute()
     )
     rows = result.data
-    if rows:
-        return rows[0]
-    else:
-        return None
+    return rows[0] if rows else None
+
 
 def list_groups(user_id: str) -> list[dict]:
-    # this function returns user all saved groups
+    """Returns all of a user's saved groups (group_id, name, headers,
+    created_at) — powers the history/search view."""
     result = (
         supabase.table(GROUPS_TABLE)
-        .select("group_id, name, headers, created_at")
+        .select("group_id, name, headers, created_at, last_viewed_at")
         .eq("user_id", user_id)
         .order("created_at", desc=True)
         .execute()
     )
     return result.data
 
+
 def df_to_reading_rows(group_id: str, df: pd.DataFrame) -> list[dict]:
-    # This function is responsible for storing the combined files in pandas
-    # into the reading table, each row being saved here.
-    # date time becomes its own column as its what we are going to use to determine what rows user needs
+    """Converts a combined DataFrame (from processor.py) into row dicts
+    ready for insertion: datetime becomes its own column, everything
+    else is folded into the data JSONB column.
+
+    NaN values (missing/invalid readings -- e.g. from
+    analytics.convert_columns coercing a bad value) are converted to
+    None first. JSON has no NaN; leaving them as float('nan') crashes
+    the insert at serialization time with "Out of range float values
+    are not JSON compliant". None serializes cleanly to JSON null,
+    which is also the correct meaning here: a missing value."""
+    clean_df = df.astype(object).where(pd.notna(df), None)
 
     records = []
-
-    # code below we convert the panda tables to dictionaries, and make columns as the key, and
-    dataframe_rows = df.to_dict(orient = "records")
-
-    # Process one DataFrame row at a time.
-    for row in dataframe_rows:
-        # Take datetime out because it has its own database column.
-        datetime_value = row.pop("datetime")
-
-        # Convert the Pandas Timestamp into a standard string.
-        datetime_string = datetime_value.isoformat()
-
-        # Build one row in the shape expected by Supabase.
-        database_row = {
+    for row in clean_df.to_dict(orient="records"):
+        dt = row.pop("datetime")
+        records.append({
             "group_id": group_id,
-            "datetime": datetime_string,
+            "datetime": dt.isoformat(),
             "data": row,
-        }
-
-        # Add the completed database row to the list.
-        records.append(database_row)
-
+        })
     return records
 
+
 def insert_readings(group_id: str, df: pd.DataFrame) -> None:
-
-    # this function is responsible for inserting rows in chunck sizes
-    # into the reading table section.
-
+    """Inserts a DataFrame's rows for a group, in chunks."""
     rows = df_to_reading_rows(group_id, df)
     for i in range(0, len(rows), INSERT_CHUNK_SIZE):
-        chunk = rows[i : i + INSERT_CHUNK_SIZE]
+        chunk = rows[i:i + INSERT_CHUNK_SIZE]
         supabase.table(READINGS_TABLE).insert(chunk).execute()
 
+
 def replace_readings(group_id: str, df: pd.DataFrame) -> None:
-        """Deletes a group's existing readings and inserts the freshly
-        recombined set. Called after adding or removing a file from a group,
-        since permanent_storage stays the source of truth and readings is
-        just a derived cache."""
-        supabase.table(READINGS_TABLE).delete().eq("group_id", group_id).execute()
-        insert_readings(group_id, df)
+    """Deletes a group's existing readings and inserts the freshly
+    recombined set. Called after adding or removing a file from a group,
+    since permanent_storage stays the source of truth and readings is
+    just a derived cache."""
+    supabase.table(READINGS_TABLE).delete().eq("group_id", group_id).execute()
+    insert_readings(group_id, df)
 
-def get_latest_reading_time(group_id:str) -> datetime:
-        """Returns the most recent datetime among a group's readings, or None
-        if it has no readings yet. Used as the anchor point for time-window
-        filtering — filtering is relative to the data's own latest timestamp,
-        not to now(), since uploaded data may not be recent."""
-        result = (
-            supabase.table(READINGS_TABLE)
-            .select("datetime")
-            .eq("group_id", group_id)
-            .order("datetime", desc=True)
-            .limit(1)
-            .execute()
-        )
-        rows = result.data
-        if not rows:
-            return None
 
-        return date_parser.isoparse(rows[0]["datetime"])
+def get_latest_reading_time(group_id: str) -> datetime | None:
+    """Returns the most recent datetime among a group's readings, or None
+    if it has no readings yet. Used as the anchor point for time-window
+    filtering — filtering is relative to the data's own latest timestamp,
+    not to now(), since uploaded data may not be recent."""
+    result = (
+        supabase.table(READINGS_TABLE)
+        .select("datetime")
+        .eq("group_id", group_id)
+        .order("datetime", desc=True)
+        .limit(1)
+        .execute()
+    )
+    rows = result.data
+    if not rows:
+        return None
+    return date_parser.isoparse(rows[0]["datetime"])
 
 
 def get_readings(group_id: str, hours: float | None = None) -> list[dict]:
@@ -160,11 +153,66 @@ def get_readings(group_id: str, hours: float | None = None) -> list[dict]:
     result = query.order("datetime").execute()
     return result.data
 
+
 def delete_group(group_id: str) -> None:
-    # delete the group row which also automatically deletes group reading.
+    """Deletes a group's row; group_readings rows cascade automatically
+    via the foreign key. Does not touch permanent_storage — call
+    storage.py separately to remove the underlying files."""
     supabase.table(GROUPS_TABLE).delete().eq("group_id", group_id).execute()
 
 
+# ---------------------------------------------------------------------
+# NEW -- "most recently viewed" tracking, so Home can auto-load whatever
+# the user was actually last looking at (not just whatever was created
+# most recently, which can differ once someone has more than one group).
+# ---------------------------------------------------------------------
+
+def touch_last_viewed(group_id: str) -> None:
+    """Marks a group as the one currently being viewed. Called whenever a
+    group becomes active on Home -- right now that's every time its
+    readings are fetched; later this is also the group switcher and
+    History's View action."""
+    supabase.table(GROUPS_TABLE).update(
+        {"last_viewed_at": datetime.utcnow().isoformat()}
+    ).eq("group_id", group_id).execute()
 
 
+def get_most_recently_viewed_group(user_id: str) -> dict | None:
+    """Returns the user's most recently viewed group (by last_viewed_at),
+    or None if they have no groups yet. Powers the auto-load-on-sign-in
+    behavior on Home. New groups start with last_viewed_at = now() (a
+    database default), so a freshly saved group is naturally "most
+    recent" until something else gets viewed."""
+    result = (
+        supabase.table(GROUPS_TABLE)
+        .select("*")
+        .eq("user_id", user_id)
+        .order("last_viewed_at", desc=True)
+        .limit(1)
+        .execute()
+    )
+    rows = result.data
+    return rows[0] if rows else None
 
+
+def get_group_sample(group_id: str, limit: int = 3) -> list[dict]:
+    """Returns a handful of a group's existing readings (most recent
+    first) -- used to show a real, labeled side-by-side comparison when
+    the headerless-file resolver thinks an uploaded file matches this
+    group, so the user has actual data to compare against instead of
+    just a column count."""
+    result = (
+        supabase.table(READINGS_TABLE)
+        .select("datetime, data")
+        .eq("group_id", group_id)
+        .order("datetime", desc=True)
+        .limit(limit)
+        .execute()
+    )
+    return result.data
+
+
+def rename_group(group_id: str, name: str) -> None:
+    """Renames a group. Name-uniqueness checking happens in app.py
+    before this is called -- this function just writes the new name."""
+    supabase.table(GROUPS_TABLE).update({"name": name}).eq("group_id", group_id).execute()

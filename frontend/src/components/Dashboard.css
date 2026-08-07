@@ -1,0 +1,305 @@
+/* Shared styling for the post-login dashboard sections: Individual Graph,
+   Overlay Graph, Stats panel, Table view. Dark navy/slate theme with
+   cyan accents. Place at src/components/Dashboard.css. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+.individual-graph, .overlay-graph, .stats-panel, .table-view {
+  background: #0F1B2D;
+  border: 1px solid #22324A;
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+.individual-graph h2,
+.overlay-graph h2,
+.stats-panel h2 {
+  font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #F3F8FF;
+  margin: 0;
+  padding-left: 12px;
+  border-left: 3px solid #29C7F6;
+}
+
+.individual-graph__header,
+.overlay-graph__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.individual-graph__controls {
+  display: flex;
+  gap: 10px;
+}
+
+.overlay-graph__selects {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.overlay-graph__vs {
+  font-size: 12px;
+  color: #6F8097;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.dashboard-select {
+  padding: 6px 12px;
+  border: 1px solid #22324A;
+  border-radius: 8px;
+  background: #132238;
+  color: #F3F8FF;
+  font-size: 13px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  color-scheme: dark;
+  transition: border-color 0.15s ease;
+}
+
+.dashboard-select:hover {
+  border-color: #29C7F6;
+}
+
+.stats-panel__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0 20px;
+}
+
+.stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  border: 1px solid #22324A;
+  border-radius: 10px;
+  min-width: 150px;
+  background: #132238;
+}
+
+.stats-card__label {
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.04em;
+  color: #29C7F6;
+  text-transform: uppercase;
+}
+
+.stats-card__value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #F3F8FF;
+}
+
+.stats-card__delta {
+  font-size: 12px;
+}
+
+.stats-card__delta.up { color: #29C7F6; }
+.stats-card__delta.down { color: #9AA9BD; }
+
+.stats-table, .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: #F3F8FF;
+}
+
+.stats-table thead th, .data-table thead th {
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #6F8097;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid #22324A;
+}
+
+.stats-table td, .data-table td {
+  border-bottom: 1px solid rgba(34, 50, 74, 0.6);
+  padding: 8px 10px;
+  white-space: nowrap;
+  color: #F3F8FF;
+}
+
+.stats-table tbody tr:hover, .data-table tbody tr:hover {
+  background: #132238;
+}
+
+.table-view__tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.table-view__tabs button {
+  padding: 7px 16px;
+  border: 1px solid #22324A;
+  border-radius: 8px;
+  background: #132238;
+  color: #9AA9BD;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.table-view__tabs button:hover {
+  border-color: #29C7F6;
+  color: #F3F8FF;
+}
+
+.table-view__tabs button.active {
+  background: rgba(41, 199, 246, 0.14);
+  color: #29C7F6;
+  border-color: #29C7F6;
+}
+
+.table-view__swaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #6F8097;
+}
+
+.table-view__swaps select {
+  margin-left: 6px;
+  padding: 4px 8px;
+  border: 1px solid #22324A;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: #F3F8FF;
+  background: #132238;
+  color-scheme: dark;
+}
+
+.table-view__download {
+  margin-top: 14px;
+  padding: 8px 18px;
+  border: 1px solid #29C7F6;
+  border-radius: 8px;
+  background: transparent;
+  color: #29C7F6;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.table-view__download:hover {
+  background: #29C7F6;
+  color: #08111F;
+}
+
+.stats-panel__field-label {
+  display: block;
+  font-size: 12px;
+  color: #9AA9BD;
+  margin: 14px 0 8px;
+}
+
+.stats-panel__field-label:first-of-type {
+  margin-top: 0;
+}
+
+.stats-panel__radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 4px;
+}
+
+.stats-panel__radios label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #F3F8FF;
+  cursor: pointer;
+}
+
+.stats-panel__radios input[type="radio"] {
+  accent-color: #29C7F6;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.stats-panel__checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-bottom: 16px;
+}
+
+.stats-panel__checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9AA9BD;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.stats-panel__checkboxes input[type="checkbox"] {
+  accent-color: #29C7F6;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.stats-panel__table-spaced {
+  margin-top: 14px;
+}
+
+.graph-empty {
+  color: #6F8097;
+  font-size: 14px;
+}
+
+.boxplot-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.boxplot-gridline {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.boxplot-axis-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  fill: #6F8097;
+}
+
+.boxplot-whisker {
+  stroke: #29C7F6;
+  stroke-width: 1.5;
+}
+
+.boxplot-box {
+  fill: rgba(41, 199, 246, 0.16);
+  stroke: #29C7F6;
+  stroke-width: 1.5;
+}
+
+.boxplot-median {
+  stroke: #F3F8FF;
+  stroke-width: 2;
+}
