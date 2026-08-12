@@ -7,7 +7,7 @@
 // Delete the old hooks/useAuth.js and place this at hooks/UseAuth.jsx instead.
 
 import { createContext, useContext, useState, useEffect } from 'react'
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../lib/SupabaseClient";
 
 const API_URL = import.meta.env.VITE_API_URL
 
