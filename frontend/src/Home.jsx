@@ -10,7 +10,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from './hooks/UseAuth.jsx'
 import Sidebar from './components/Sidebar'
-import FileUpload from './components/FileUpload'
+import FileUpload from './components/Fileupload'
 import History from './components/History'
 import Settings, { DEFAULT_HOURS_KEY } from './components/Settings'
 import TimeWindowSelect from './components/TimeWindowSelect'
