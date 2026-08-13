@@ -4,7 +4,7 @@
 // Place this at src/components/Login.jsx (replaces the previous version).
 // Needs its sibling Login.css in the same folder.
 
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/UseAuth.jsx'
 import './Login.css'
 
 export default function Login() {
