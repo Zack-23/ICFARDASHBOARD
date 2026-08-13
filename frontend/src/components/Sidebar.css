@@ -1,7 +1,7 @@
 /* Sidebar -- deep navy, cyan active/hover states.
    Place at src/components/Sidebar.css. */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 .sidebar {
   width: 240px;
@@ -58,10 +58,10 @@
 }
 
 .sidebar__brand {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 15px;
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
   font-weight: 600;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.01em;
   color: #F3F8FF;
   padding-bottom: 20px;
   margin-bottom: 20px;

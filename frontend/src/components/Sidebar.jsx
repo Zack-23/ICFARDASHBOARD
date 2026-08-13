@@ -70,7 +70,7 @@ export default function Sidebar({ mode, onNavigateHome, onNavigateHistory, onNav
         <ChevronIcon collapsed={collapsed} />
       </button>
 
-      <div className="sidebar__brand">{collapsed ? 'I' : 'ICFAR'}</div>
+      <div className="sidebar__brand">{collapsed ? 'I' : 'InsightLab'}</div>
 
       <button className="sidebar__upload" onClick={onUploadNew} title="Upload files">
         <UploadIcon />

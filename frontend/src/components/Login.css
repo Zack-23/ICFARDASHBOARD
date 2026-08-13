@@ -4,7 +4,7 @@
    navy/slate/cyan system as the rest of the app.
    Place this at src/components/Login.css. */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 .login-screen {
   --bg-main: #08111F;
@@ -88,10 +88,10 @@
   top: 32px;
   left: 32px;
   z-index: 1;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 14px;
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.01em;
   color: var(--text-primary);
 }
 

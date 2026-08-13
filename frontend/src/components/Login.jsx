@@ -4,7 +4,7 @@
 // Place this at src/components/Login.jsx (replaces the previous version).
 // Needs its sibling Login.css in the same folder.
 
-import { useAuth } from '../hooks/UseAuth.jsx'
+import { useAuth } from '../hooks/useAuth'
 import './Login.css'
 
 export default function Login() {
@@ -36,7 +36,7 @@ export default function Login() {
         </div>
       </div>
 
-      <span className="login-wordmark">ICFAR</span>
+      <span className="login-wordmark">InsightLab</span>
 
       <div className="login-card">
         <span className="login-eyebrow">Sign in</span>
@@ -54,8 +54,6 @@ export default function Login() {
           </svg>
           Continue with Google
         </button>
-
-        <p className="login-footer">Built for Jericho Lab · FAST Lab</p>
       </div>
     </div>
   )
