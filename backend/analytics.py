@@ -157,52 +157,52 @@ def summary_stats(df: pd.DataFrame, columns : list[str]) -> dict:
     return summary
 
 
-# ---------------------------------------------------------------------------
-# NEW -- column "family" grouping. A family is every column that represents
-# the same measurement type across multiple probes (T01..T08 are all
-# "temperature", VWC1..VWC4 are all "soil moisture", Teros1_mV..Teros4_mV
-# are all "teros raw mV"). The rule is generic on purpose: strip the digit
-# run out of a column name, and whatever's left (prefix + suffix) is its
-# family key -- this works for ANY group's arbitrary sensor set, since
-# different saved groups can have completely different headers.
-# ---------------------------------------------------------------------------
 
-# This pattern will help us group similar columns.
-# before the number will be considered prefix,
-# after the numbers it suffix. we will know similar
-# groups by identifying if prefix and suffix are same.
+
+
+
+# using regex to group similar columns
+#\D * this looks at any non digit charcter at the start
+#\D+ this looks at digit characters in the middle
+#\D* this looks at any non digit character at the end
 FAMILY_PATTERN = re.compile(r"^(\D*)(\d+)(\D*)$")
 
 def column_family_key(column: str) -> str:
-    """Returns a column's family key -- its name with the digit run (the
-    probe index) removed. A column with no digits at all (e.g. VWC_Range)
-    has no siblings, so it's treated as its own one-member family."""
+
+    # This function purpose is to apply the regex concept to columns
+    # so we identify if they are the same group.
+
+    # check if columns passed follows structure we are expecting.
     match = FAMILY_PATTERN.match(column)
     if not match:
         return column
+
+    # we exclude middle number and return what is considered a match.
     prefix, _index, suffix = match.groups()
     return prefix + suffix
 
 def get_column_family(columns: list[str], selected_column: str) -> list[str]:
-        """Given the full list of available columns and one column the user
-        picked as a representative (e.g. 'T01'), returns every column that
-        belongs to the same family (e.g. all of T01..T08), in their original
-        order. Selecting a family member is a stand-in for selecting the
-        whole family -- the frontend never graphs just the one column picked."""
+       # this function purpose is to out of the available columns and one column the user picked
+       # as a representative and return every column that belongs to the same family. for example
+       # T01.. T08.
+
 
         if selected_column not in columns:
             return []
         key = column_family_key(selected_column)
+
         return [c for c in columns if column_family_key(c) == key]
 
 
 def get_available_families(columns: list[str]) -> dict[str, list[str]]:
-    """Groups every column into its family. Powers dropdowns that should
-    only show one representative per family, not every individual column."""
-    families = {}
-    for column in columns:
 
+    # This function purpose is to group every column to its family
+
+    families = {}
+
+    for column in columns:
         key = column_family_key(column)
+
         if key not in families:
             families[key] = []
 
@@ -216,6 +216,8 @@ def family_series(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     ALL of that family's columns are missing. This generalizes
     single_series (1 column) and overlay_series (2 named columns) to an
     arbitrary-size family -- used by the Individual Graph."""
+
+
     present = [c for c in columns if c in df.columns]
     if not present:
         return pd.DataFrame(columns=["datetime"])
