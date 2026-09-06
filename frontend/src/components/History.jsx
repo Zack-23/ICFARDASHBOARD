@@ -1,14 +1,7 @@
-// History -- a list of saved groups with a search bar. Each row has
-// View (loads the group as active and returns to the workspace) and
-// Delete (removes the whole group, with an inline confirm). Clicking
-// the group itself (like opening a folder) navigates into a dedicated
-// files view for that group, where individual files can be added or
-// deleted -- file management lives one level down, not inline in the
-// list.
-// Place this at src/components/History.jsx. Needs its sibling History.css.
 
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useAuth } from '../hooks/UseAuth.jsx'
+import { useWorkspace } from '../hooks/UseWorkspace.jsx'
 import './History.css'
 
 function FolderIcon() {
@@ -19,7 +12,7 @@ function FolderIcon() {
   )
 }
 
-function HistoryRow({ group, onView, onOpen, onDeleted }) {
+function HistoryRow({ group, onView, onOpen, onDeleted, canModify }) {
   const { apiFetch } = useAuth()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -56,19 +49,21 @@ function HistoryRow({ group, onView, onOpen, onDeleted }) {
             View
           </button>
 
-          {confirmingDelete ? (
-            <>
-              <button className="history__delete-confirm" onClick={handleDeleteGroup} disabled={deleting}>
-                {deleting ? 'Deleting...' : 'Confirm'}
+          {canModify && (
+            confirmingDelete ? (
+              <>
+                <button className="history__delete-confirm" onClick={handleDeleteGroup} disabled={deleting}>
+                  {deleting ? 'Deleting...' : 'Confirm'}
+                </button>
+                <button className="history__delete-cancel" onClick={() => setConfirmingDelete(false)}>
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button className="history__delete" onClick={() => setConfirmingDelete(true)}>
+                Delete
               </button>
-              <button className="history__delete-cancel" onClick={() => setConfirmingDelete(false)}>
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button className="history__delete" onClick={() => setConfirmingDelete(true)}>
-              Delete
-            </button>
+            )
           )}
         </div>
       </div>
@@ -76,8 +71,9 @@ function HistoryRow({ group, onView, onOpen, onDeleted }) {
   )
 }
 
-function GroupFiles({ group, onBack, onGroupDeleted }) {
+function GroupFiles({ group, onBack, onGroupDeleted, canModify }) {
   const { apiFetch } = useAuth()
+  const { activeWorkspace } = useWorkspace()
   const fileInputRef = useRef(null)
 
   const [files, setFiles] = useState(null)
@@ -136,6 +132,7 @@ function GroupFiles({ group, onBack, onGroupDeleted }) {
 
     try {
       const formData = new FormData()
+      formData.append('workspace_id', activeWorkspace.workspace_id)
       for (const file of fileList) formData.append('files', file)
 
       const uploadRes = await apiFetch('/upload', { method: 'POST', body: formData })
@@ -150,6 +147,7 @@ function GroupFiles({ group, onBack, onGroupDeleted }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          workspace_id: activeWorkspace.workspace_id,
           session_id: uploadData.session_id,
           groups: [{
             name: group.name,
@@ -185,26 +183,28 @@ function GroupFiles({ group, onBack, onGroupDeleted }) {
         <button className="history__back" onClick={onBack}>Back to groups</button>
       </div>
 
-      <div className="history__folder-actions">
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          style={{ display: 'none' }}
-          onChange={(e) => handleAddFiles(e.target.files)}
-        />
-        <button
-          className="history__add"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={addStatus === 'uploading' || addStatus === 'saving'}
-        >
-          Add files
-        </button>
-        {addStatus === 'uploading' && <span className="history__row-status">Uploading...</span>}
-        {addStatus === 'saving' && <span className="history__row-status">Saving...</span>}
-        {addStatus === 'done' && <span className="history__row-status done">Files added</span>}
-        {addStatus === 'error' && <span className="history__row-status error">{addError}</span>}
-      </div>
+      {canModify && (
+        <div className="history__folder-actions">
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            style={{ display: 'none' }}
+            onChange={(e) => handleAddFiles(e.target.files)}
+          />
+          <button
+            className="history__add"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={addStatus === 'uploading' || addStatus === 'saving'}
+          >
+            Add files
+          </button>
+          {addStatus === 'uploading' && <span className="history__row-status">Uploading...</span>}
+          {addStatus === 'saving' && <span className="history__row-status">Saving...</span>}
+          {addStatus === 'done' && <span className="history__row-status done">Files added</span>}
+          {addStatus === 'error' && <span className="history__row-status error">{addError}</span>}
+        </div>
+      )}
 
       {loading && <p className="history__loading">Loading files...</p>}
       {error && <p className="file-upload__error">{error}</p>}
@@ -215,13 +215,15 @@ function GroupFiles({ group, onBack, onGroupDeleted }) {
           {files.map((filename) => (
             <div className="history__file-row" key={filename}>
               <span className="history__file-name">{filename}</span>
-              <button
-                className="history__file-delete"
-                onClick={() => handleDeleteFile(filename)}
-                disabled={deletingFile === filename}
-              >
-                {deletingFile === filename ? 'Removing...' : 'Delete'}
-              </button>
+              {canModify && (
+                <button
+                  className="history__file-delete"
+                  onClick={() => handleDeleteFile(filename)}
+                  disabled={deletingFile === filename}
+                >
+                  {deletingFile === filename ? 'Removing...' : 'Delete'}
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -234,6 +236,7 @@ const PAGE_SIZE = 8
 
 export default function History({ onView, onBack }) {
   const { apiFetch } = useAuth()
+  const { activeWorkspace, canModifyDatasets } = useWorkspace()
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -241,12 +244,15 @@ export default function History({ onView, onBack }) {
   const [page, setPage] = useState(1)
   const [openGroup, setOpenGroup] = useState(null)
 
+  const workspaceId = activeWorkspace?.workspace_id
+
   useEffect(() => {
+    if (!workspaceId) return
     let cancelled = false
 
     async function load() {
       try {
-        const res = await apiFetch('/groups')
+        const res = await apiFetch(`/groups?workspace_id=${workspaceId}`)
         if (!res.ok) throw new Error('Failed to load groups')
         const data = await res.json()
         if (!cancelled) setGroups(data.groups)
@@ -260,7 +266,7 @@ export default function History({ onView, onBack }) {
     load()
     return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [workspaceId])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -287,6 +293,7 @@ export default function History({ onView, onBack }) {
         group={openGroup}
         onBack={() => setOpenGroup(null)}
         onGroupDeleted={() => handleDeleted(openGroup.group_id)}
+        canModify={canModifyDatasets}
       />
     )
   }
@@ -321,6 +328,7 @@ export default function History({ onView, onBack }) {
               onView={onView}
               onOpen={() => setOpenGroup(group)}
               onDeleted={handleDeleted}
+              canModify={canModifyDatasets}
             />
           ))}
 
