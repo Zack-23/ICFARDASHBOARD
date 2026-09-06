@@ -1,10 +1,4 @@
-// Shared Supabase auth state for the whole app, provided via Context so
-// every component that calls useAuth() gets the SAME session -- not a
-// fresh, independently-loading copy of its own.
-//
-// This REPLACES the previous hooks/useAuth.js. Note the .jsx extension --
-// it now returns JSX (<AuthContext.Provider>), so it can't stay a .js file.
-// Delete the old hooks/useAuth.js and place this at hooks/UseAuth.jsx instead.
+
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from "../lib/SupabaseClient";
@@ -32,11 +26,15 @@ export function AuthProvider({ children }) {
 
   const signInWithGoogle = () => {
     supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-    redirectTo: window.location.origin,
-  },
-})
+      provider: 'google',
+      options: {
+        // Preserves the current path (not just the origin) -- so a
+        // logged-out visitor who lands on /invite/:token, then signs
+        // in, gets returned to that same invite page afterward instead
+        // of the OAuth round trip dropping them back at "/".
+        redirectTo: window.location.href,
+      },
+    })
   }
 
   const signOut = () => {
