@@ -1,22 +1,14 @@
-// Step 1 of the upload flow: pick files and upload them. Posts to
-// /upload, which groups files by header structure but doesn't save or
-// combine anything yet -- that only happens once each group gets saved
-// (see GroupNaming.jsx). Supports real drag-and-drop.
-// Place this at src/components/FileUpload.jsx. Needs its sibling
-// Upload.css.
-//
-// Keeps the original File objects around (not just the /upload
-// response) and threads them down to HeaderlessResolver, so it can
-// read a raw content preview straight from the browser's copy of the
-// file -- no backend round-trip needed for that.
+
 
 import { useState } from 'react'
 import { useAuth } from '../hooks/UseAuth.jsx'
+import { useWorkspace } from '../hooks/UseWorkspace.jsx'
 import GroupOverview from './GroupOverview'
 import './Upload.css'
 
 export default function FileUpload({ onComplete }) {
   const { apiFetch } = useAuth()
+  const { activeWorkspace } = useWorkspace()
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
   const [uploadResult, setUploadResult] = useState(null)
@@ -28,6 +20,7 @@ export default function FileUpload({ onComplete }) {
 
     const filesArray = Array.from(fileList)
     const formData = new FormData()
+    formData.append('workspace_id', activeWorkspace.workspace_id)
     for (const file of filesArray) {
       formData.append('files', file)
     }
