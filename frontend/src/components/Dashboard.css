@@ -1,6 +1,4 @@
-/* Shared styling for the post-login dashboard sections: Individual Graph,
-   Overlay Graph, Stats panel, Table view. Dark navy/slate theme with
-   cyan accents. Place at src/components/Dashboard.css. */
+
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
