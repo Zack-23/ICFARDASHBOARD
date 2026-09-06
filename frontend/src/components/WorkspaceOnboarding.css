@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+.ws-onboarding {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-main);
+  font-family: var(--font-sans);
+  padding: 24px;
+  color-scheme: dark;
+}
+
+.ws-onboarding__card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 44px 40px;
+  box-shadow: var(--shadow-modal);
+  text-align: center;
+}
+
+.ws-onboarding__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  background: var(--accent-cyan-wash);
+  border: 1px solid var(--accent-cyan-border);
+  color: var(--accent-cyan);
+}
+
+.ws-onboarding__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ws-onboarding__eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+}
+
+.ws-onboarding__heading {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 10px;
+}
+
+.ws-onboarding__subtext {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.ws-onboarding__label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.ws-onboarding__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  margin-bottom: 8px;
+  transition: border-color var(--ease);
+}
+
+.ws-onboarding__input::placeholder {
+  color: var(--text-muted);
+}
+
+.ws-onboarding__input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+}
+
+.ws-onboarding__error {
+  font-size: 12px;
+  color: var(--danger-text);
+  text-align: left;
+  margin: 4px 0 8px;
+}
+
+.ws-onboarding__submit {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 20px;
+  background: var(--accent-cyan);
+  color: var(--bg-main);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--ease), box-shadow var(--ease);
+}
+
+.ws-onboarding__submit:hover:not(:disabled) {
+  background: var(--accent-cyan-hover);
+  box-shadow: 0 0 0 3px var(--accent-cyan-wash);
+}
+
+.ws-onboarding__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
