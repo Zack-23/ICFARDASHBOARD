@@ -1,4 +1,7 @@
-/* Sidebar -- deep navy, cyan active/hover states.
+/* Sidebar -- deep navy, cyan active/hover states. Structured into
+   labeled sections, each a vertical stack of quiet icon+label rows
+   sharing one visual language (.sidebar__row) -- nothing except the
+   active page gets a louder treatment than anything else.
    Place at src/components/Sidebar.css. */
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
@@ -63,8 +66,8 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   color: #F3F8FF;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
   border-bottom: 1px solid #22324A;
 }
 
@@ -72,40 +75,40 @@
   text-align: center;
 }
 
-.sidebar__upload {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 14px;
-  background: #29C7F6;
-  color: #08111F;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: 'IBM Plex Sans', sans-serif;
-  cursor: pointer;
-  margin-bottom: 24px;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
+/* ---------- Sections ---------- */
 
-.sidebar__upload:hover {
-  background: #4DD8FF;
-  box-shadow: 0 0 0 3px rgba(41, 199, 246, 0.18);
-}
-
-.sidebar__upload svg {
-  width: 16px;
-  height: 16px;
-}
-
-.sidebar__nav {
+.sidebar__section {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
+  margin-bottom: 18px;
 }
 
-.sidebar__nav button {
+.sidebar__section-label {
+  display: block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #5B6B82;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Active workspace row: switcher chip + Share chip ---------- */
+
+.sidebar__workspace-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* ---------- Shared row style -- every nav destination, upload,
+   members, share, workspace settings, and sign out all look the same
+   at rest and only differ by state (hover / active). ---------- */
+
+.sidebar__row {
   display: flex;
   align-items: center;
   gap: 11px;
@@ -122,32 +125,45 @@
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.sidebar__nav button svg {
+.sidebar__row svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
 
-.sidebar__nav button:hover {
+.sidebar__row:hover {
   background: #0F1B2D;
   color: #F3F8FF;
 }
 
-.sidebar__nav button.active {
-  background: rgba(41, 199, 246, 0.12);
+.sidebar__row.active {
+  background: rgba(41, 199, 246, 0.14);
   color: #29C7F6;
   border-color: rgba(41, 199, 246, 0.35);
-  box-shadow: 0 0 12px rgba(41, 199, 246, 0.1);
+}
+
+/* Pill variant -- used for the Share button that sits beside the
+   workspace switcher chip, sized to content instead of filling the
+   row. */
+.sidebar__row--pill {
+  width: auto;
+  flex-shrink: 0;
+  border-color: #22324A;
+  background: #0F1B2D;
+}
+
+.sidebar__row--pill:hover {
+  border-color: #29C7F6;
+  color: #29C7F6;
+  background: #0F1B2D;
 }
 
 .sidebar.collapsed .sidebar__brand,
-.sidebar.collapsed .sidebar__upload,
-.sidebar.collapsed .sidebar__nav button {
+.sidebar.collapsed .sidebar__row {
   justify-content: center;
 }
 
-.sidebar.collapsed .sidebar__upload,
-.sidebar.collapsed .sidebar__nav button {
+.sidebar.collapsed .sidebar__row {
   padding-left: 0;
   padding-right: 0;
 }
@@ -156,12 +172,14 @@
   flex: 1;
 }
 
+/* ---------- Footer: profile row + sign out row ---------- */
+
 .sidebar__footer {
   border-top: 1px solid #22324A;
-  padding-top: 16px;
+  padding-top: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
 }
 
 .sidebar__profile {
@@ -169,6 +187,7 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+  padding: 6px 4px;
 }
 
 .sidebar__avatar {
@@ -187,34 +206,47 @@
   font-weight: 600;
 }
 
+.sidebar__profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebar__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F3F8FF;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sidebar__email {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #6F8097;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.sidebar__profile-chevron {
+  flex-shrink: 0;
+  color: #5B6B82;
+  display: flex;
+}
+
+.sidebar__profile-chevron svg {
+  width: 14px;
+  height: 14px;
+}
+
 .sidebar__signout {
-  padding: 8px 14px;
-  background: transparent;
-  border: 1px solid #22324A;
-  border-radius: 8px;
   color: #9AA9BD;
-  font-size: 12px;
-  font-family: 'IBM Plex Sans', sans-serif;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-  width: 100%;
-  text-align: center;
 }
 
-.sidebar__signout:hover {
-  border-color: #29C7F6;
-  color: #29C7F6;
-}
-
-.sidebar.collapsed .sidebar__signout {
-  font-size: 10px;
-  padding: 8px 4px;
+.sidebar.collapsed .sidebar__profile {
+  justify-content: center;
+  padding: 6px 0;
 }
