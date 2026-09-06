@@ -1,0 +1,46 @@
+/* Shared design tokens -- the same navy/slate/cyan system already used
+   by Sidebar, Home, History, and Login, lifted into :root custom
+   properties so every new Workspace component reads from one source
+   instead of repeating hex codes. Existing components keep their literal
+   values (not worth the churn of touching working CSS), but anything
+   new should use these.
+   Place at src/styles/tokens.css, imported once from src/index.css. */
+
+:root {
+  --bg-main: #08111F;
+  --surface: #0F1B2D;
+  --surface-raised: #132238;
+  --surface-sunken: #0B1220;
+  --border-subtle: #22324A;
+  --border-strong: #2E4160;
+
+  --accent-cyan: #29C7F6;
+  --accent-cyan-hover: #4DD8FF;
+  --accent-cyan-wash: rgba(41, 199, 246, 0.12);
+  --accent-cyan-border: rgba(41, 199, 246, 0.35);
+
+  --text-primary: #F3F8FF;
+  --text-secondary: #9AA9BD;
+  --text-muted: #6F8097;
+
+  --danger: #C4693A;
+  --danger-text: #E8A387;
+  --danger-wash: rgba(196, 105, 58, 0.14);
+  --danger-border: rgba(196, 105, 58, 0.5);
+
+  --success: #4DD8FF;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.5);
+
+  --font-sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-serif: 'Fraunces', serif;
+
+  --ease: 0.15s ease;
+}
