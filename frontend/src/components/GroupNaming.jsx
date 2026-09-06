@@ -1,18 +1,13 @@
-// Step 3 of the upload flow: one name field per checked group, each with
-// its own always-visible Save button (Enter still works too). Once
-// saving is done, either goes straight to "View dashboard" or -- if
-// this upload also had headerless files -- routes into
-// HeaderlessResolver first, passing along what got saved (name +
-// headers + raw_header) so it can check for structure matches.
-// Place this at src/components/GroupNaming.jsx. Needs its sibling
-// Upload.css (already imported by FileUpload.jsx).
+
 
 import { useState } from 'react'
 import { useAuth } from '../hooks/UseAuth.jsx'
+import { useWorkspace } from '../hooks/UseWorkspace.jsx'
 import HeaderlessResolver from './HeaderlessResolver'
 
 function GroupNameRow({ sessionId, group, onSaved }) {
   const { apiFetch } = useAuth()
+  const { activeWorkspace } = useWorkspace()
   const [name, setName] = useState('')
   const [status, setStatus] = useState('idle') // idle | saving | saved | error
   const [error, setError] = useState(null)
@@ -27,6 +22,7 @@ function GroupNameRow({ sessionId, group, onSaved }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          workspace_id: activeWorkspace.workspace_id,
           session_id: sessionId,
           groups: [{
             name: name.trim(),
