@@ -1,0 +1,318 @@
+.ws-settings {
+  max-width: 900px;
+  margin: 0 auto;
+  color-scheme: dark;
+}
+
+.ws-settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.ws-settings__header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ws-settings__back {
+  padding: 7px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color var(--ease);
+}
+
+.ws-settings__back:hover {
+  border-color: var(--accent-cyan);
+}
+
+.ws-settings__section {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+}
+
+.ws-settings__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ws-settings__section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.ws-settings__general-form {
+  max-width: 480px;
+}
+
+.ws-settings__save-btn {
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  background: var(--accent-cyan);
+  color: var(--bg-main);
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--ease);
+}
+
+.ws-settings__save-btn:hover:not(:disabled) {
+  background: var(--accent-cyan-hover);
+}
+
+.ws-settings__save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ws-settings__loading,
+.ws-settings__error {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ws-settings__error {
+  color: var(--danger-text);
+}
+
+.ws-settings__invite-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid var(--accent-cyan-border);
+  color: var(--accent-cyan);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+  white-space: nowrap;
+}
+
+.ws-settings__invite-btn:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-main);
+}
+
+.ws-settings__empty {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.ws-settings__empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.ws-settings__empty-subtext {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.ws-settings__member-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ws-settings__member {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ws-settings__member:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ws-settings__member-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.ws-settings__member-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-cyan-wash);
+  border: 1px solid var(--accent-cyan-border);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ws-settings__member-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ws-settings__member-email {
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ws-settings__member-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.ws-settings__owner-badge {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.ws-settings__member-toggles {
+  flex: 1;
+  display: flex;
+  gap: 32px;
+}
+
+.ws-settings__member-toggles .toggle-row {
+  padding: 0;
+  border-bottom: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.ws-settings__member-toggles .toggle-row__description {
+  display: none;
+}
+
+.ws-settings__remove-btn {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--danger-border);
+  color: var(--danger-text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+
+.ws-settings__remove-btn:hover {
+  background: var(--danger);
+  color: var(--bg-main);
+}
+
+.ws-settings__remove-confirm {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+}
+
+.ws-settings__remove-confirm-btn,
+.ws-settings__remove-cancel-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ws-settings__remove-confirm-btn {
+  border: 1px solid var(--danger);
+  background: var(--danger);
+  color: var(--bg-main);
+}
+
+.ws-settings__remove-cancel-btn {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.ws-settings__section--danger {
+  border-color: var(--danger-border);
+}
+
+.ws-settings__danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ws-settings__danger-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.ws-settings__danger-subtext {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.ws-settings__delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 9px 16px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid var(--danger-border);
+  color: var(--danger-text);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+
+.ws-settings__delete-btn:hover {
+  background: var(--danger);
+  color: var(--bg-main);
+}
+
+.ws-settings__delete-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.ws-settings__delete-warning {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
