@@ -1,6 +1,8 @@
 /* Global reset -- replaces Vite's default starter styles.
    Place this at src/index.css (overwrite the existing one). */
 
+@import './styles/tokens.css';
+
 :root {
   font-family: 'IBM Plex Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
