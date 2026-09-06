@@ -47,19 +47,19 @@
   margin-top: 60px;
 }
 
-.home__workspace {
+.home__analysis {
   max-width: 1500px;
   margin: 0 auto;
 }
 
-.home__workspace-header {
+.home__analysis-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.home__workspace-eyebrow {
+.home__analysis-eyebrow {
   display: block;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
@@ -70,14 +70,14 @@
   margin-bottom: 4px;
 }
 
-.home__workspace-header h1 {
+.home__analysis-header h1 {
   font-size: 24px;
   font-weight: 600;
   color: #F3F8FF;
   margin: 0;
 }
 
-.home__workspace-title {
+.home__analysis-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -89,6 +89,10 @@
   width: fit-content;
 }
 
+.home__analysis-title--static {
+  cursor: default;
+}
+
 .home__rename-icon {
   width: 15px;
   height: 15px;
@@ -97,12 +101,68 @@
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 
-.home__workspace-title:hover .home__rename-icon {
+.home__analysis-title:hover .home__rename-icon {
   opacity: 1;
 }
 
-.home__workspace-title:hover {
+.home__analysis-title:not(.home__analysis-title--static):hover {
   color: #29C7F6;
+}
+
+.home__empty {
+  max-width: 420px;
+  margin: 80px auto 0;
+  text-align: center;
+}
+
+.home__empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  border-radius: 14px;
+  background: rgba(41, 199, 246, 0.1);
+  border: 1px solid rgba(41, 199, 246, 0.3);
+  color: #29C7F6;
+}
+
+.home__empty-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.home__empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #F3F8FF;
+  margin: 0 0 6px;
+}
+
+.home__empty-subtext {
+  font-size: 13.5px;
+  color: #6F8097;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.home__empty-action {
+  padding: 10px 22px;
+  background: #29C7F6;
+  color: #08111F;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.home__empty-action:hover {
+  background: #4DD8FF;
+  box-shadow: 0 0 0 3px rgba(41, 199, 246, 0.18);
 }
 
 .home__rename {
