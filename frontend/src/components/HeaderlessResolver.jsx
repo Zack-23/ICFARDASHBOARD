@@ -1,22 +1,8 @@
-// Resolves headerless files left over after naming, one file-structure
-// at a time. For each distinct structure (bucketed by column count):
-//  - Match found -> shows a quick 2-row preview of the uploaded file
-//    side-by-side with a 2-row sample from the matched group's existing
-//    data, plus plain text saying "we think this matches" (not a
-//    fabricated confidence score). Each side has a download option for
-//    when the quick preview isn't enough: the raw uploaded file itself,
-//    or the matched group's FULL data as CSV, so the user can compare
-//    thoroughly in their own tool if needed. Add/Exclude.
-//  - No match -> just the uploaded preview (+ its download), then "do
-//    you know these columns?" (yes -> type names once, becomes a new
-//    group; no -> discard).
-// Purely trust-based throughout -- previews and downloads exist so the
-// USER can judge, not so the app can. Reuses /groups/save entirely.
-// Place this at src/components/HeaderlessResolver.jsx. Needs its
-// sibling Upload.css (already loaded via FileUpload.jsx).
+
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/UseAuth.jsx'
+import { useWorkspace } from '../hooks/UseWorkspace.jsx'
 
 function DocumentIcon() {
   return (
@@ -140,6 +126,7 @@ function PreviewTable({ title, rows, columns, onDownload, downloadLabel }) {
 
 function FileReviewCard({ sessionId, columnCount, filenames, namedGroups, originalFiles, onResolved }) {
   const { apiFetch } = useAuth()
+  const { activeWorkspace } = useWorkspace()
   const match = findMatchingGroup(Number(columnCount), namedGroups)
 
   const [status, setStatus] = useState('idle') // idle | saving | done | error | rejected
@@ -193,6 +180,7 @@ function FileReviewCard({ sessionId, columnCount, filenames, namedGroups, origin
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          workspace_id: activeWorkspace.workspace_id,
           session_id: sessionId,
           groups: [{
             name: match.name,
@@ -237,6 +225,7 @@ function FileReviewCard({ sessionId, columnCount, filenames, namedGroups, origin
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          workspace_id: activeWorkspace.workspace_id,
           session_id: sessionId,
           groups: [{
             name: newGroupName.trim(),
