@@ -126,8 +126,6 @@ def stats_row(series: pd.Series) -> dict:
         "min": s.min(),
         "max": s.max(),
         "std": standard_deviation,
-        # NEW -- quartiles, so the frontend can draw an actual box-and-whisker
-        # plot (min/Q1/median/Q3/max) instead of just a bar of the mean.
         "q1": s.quantile(0.25),
         "q3": s.quantile(0.75),
     }
