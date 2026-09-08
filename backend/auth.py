@@ -44,16 +44,19 @@ def get_current_user_id(authorization: str = Header(...)) -> str:
     return response.user.id
 
 
+
 # This function exists for when a workpace owner generates an invite link.
+# and sents it, if user is not logged in or their token is bad we return None.
 def get_optional_user_id(authorization: str = Header(default=None)) -> str | None:
 
-
+    # if user is not logged in or token expired
     if not authorization or not authorization.startswith("Bearer "):
         return None
 
     token = authorization.removeprefix("Bearer ").strip()
 
     try:
+        # if user is logged in verify their token
         response = supabase.auth.get_user(token)
     except Exception:
         return None
